@@ -8,6 +8,9 @@ from CleanTools import *
 from Plots import *
 # Import dataset
 
+# Variables
+plot_info=False
+
 data_file = "./Data/CIS_bdpm.txt"
 
 drugs = pd.read_table(data_file, names=DRUGS_COLUMNS, encoding="latin-1")
@@ -41,5 +44,8 @@ with pd.option_context("display.max_seq_items", 30000):
 # Make a subset to make operations faster
 partfd = forms_drugs[:1000]
 
-plots_things_about_reinbursement_rate(partfd)
-plots_things_about_price(partfd)
+if plot_info:
+    plots_things_about_reinbursement_rate(partfd)
+    plots_things_about_price(partfd)
+
+#print(forms_drugs.head(3))

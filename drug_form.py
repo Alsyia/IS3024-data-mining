@@ -46,23 +46,27 @@ if plot_info:
     plots_things_about_reinbursement_rate(partfd)
     plots_things_about_price(partfd)
 
-pca = PCA()
+#Transforme l'etat de commercialisation en des variables string puis binaires
 forms_drugs['commercialisation_status_right']=forms_drugs['commercialisation_status_right'].astype(str)
 forms_drugs.loc[forms_drugs['commercialisation_status_right']=="Commercialisée","commercialisation_status_right"]=1
 forms_drugs.loc[forms_drugs['commercialisation_status_right']=='Non commercialisée',"commercialisation_status_right"]=0
 
+#Transforme le type de procédure en des variables string puis binaires (nationales ou non)
 forms_drugs['clearance_type']=forms_drugs['clearance_type'].astype(str)
 forms_drugs.loc[forms_drugs['clearance_type']=="Procédure nationale","clearance_type"]=1
 forms_drugs.loc[forms_drugs['clearance_type']!="Procédure nationale","clearance_type"]=0
 
+#Transforme le statut administratif en des variables string puis binaires (actives ou non)
 forms_drugs['clearance_status']=forms_drugs['clearance_status'].astype(str)
 forms_drugs.loc[forms_drugs['clearance_status']=="Autorisation active","clearance_status"]=1
 forms_drugs.loc[forms_drugs['clearance_status']!="Autorisation active","clearance_status"]=0
 
+#Transforme les agrément des collectivités en des variables string puis binaires (agrément ou non)
 forms_drugs['collectivities_aggreement']=forms_drugs['collectivities_aggreement'].astype(str)
 forms_drugs.loc[forms_drugs['collectivities_aggreement']=="oui","collectivities_aggreement"]=1
 forms_drugs.loc[forms_drugs['collectivities_aggreement']=="non","collectivities_aggreement"]=0
 
+#Transforme le statut administratif de la présentation en des variables string puis binaires (agrément ou non)
 forms_drugs['administrative_status']=forms_drugs['administrative_status'].astype(str)
 forms_drugs.loc[forms_drugs['administrative_status']=="Présentation abrogée","administrative_status"]=0
 forms_drugs.loc[forms_drugs['administrative_status']=="Présentation active","administrative_status"]=1
@@ -72,7 +76,8 @@ forms_drugs.loc[forms_drugs['enhanced_monitoring']=="Non","enhanced_monitoring"]
 forms_drugs.loc[forms_drugs['enhanced_monitoring']=="Oui","enhanced_monitoring"]=1
 
 X = forms_drugs[['commercialisation_status_right','clearance_type','clearance_status','collectivities_aggreement','administrative_status','enhanced_monitoring']].values
-print(X)
+#print(X)
+pca = PCA()
 pca.fit(X)
-print(pca.explained_variance_ratio_)
-print(pca.singular_values_)
+#print(pca.explained_variance_ratio_)
+#print(pca.singular_values_)

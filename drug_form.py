@@ -1,8 +1,5 @@
-import pandas as pd
-import seaborn as sb
-from matplotlib import pyplot as plt
-from pandas.api.types import CategoricalDtype
-import dateutil as du
+# -*- coding: utf-8 -*-
+
 from Schema import *
 from CleanTools import *
 from Plots import *
@@ -36,7 +33,7 @@ clean_prices(forms_drugs, "price")
 clean_reinbursement_rates(forms_drugs, "reinbursement_rate")
 
 # Use correct types
-use_categorical_types(forms_drugs)
+use_categorical_types(forms_drugs, print_galenic=False, print_route=False)
 use_date_types(forms_drugs)
 
 #with pd.option_context("display.max_seq_items", 30000):

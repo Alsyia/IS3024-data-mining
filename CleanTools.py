@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import pandas as pd
 from pandas.api.types import CategoricalDtype
 import dateutil as du
@@ -30,7 +32,7 @@ def clean_reinbursement_rates(df, col_name="reinbursement_rate"):
     df[col_name] = df[col_name].astype(reinbursement_rates)
 
 
-def use_categorical_types(df):
+def use_categorical_types(df, print_galenic=False, print_route=False):
 
     # Transform all categorical fields into categorical datatype
     for column in ["administrative_status",
@@ -49,7 +51,7 @@ def use_categorical_types(df):
 
         # TODO: Decommentt this, analyze categories, and fix them when needed
         # For example, we sometimes have two or three different categories because there is a typo...
-        print(f"Column {column} has values: {df[column].cat.categories}")
+        #print(f"Column {column} has values: {df[column].cat.categories}")
 
     df.loc[df['galenic_form']=='capsule molle ou','galenic_form']='capsule molle'
     df["galenic_form_simplified"]=df["galenic_form"]
@@ -84,7 +86,10 @@ def use_categorical_types(df):
     df.loc[df['galenic_form'].str.contains('film'),"galenic_form_simplified"]="autre"
     df.loc[df['galenic_form'].str.contains('gel'),"galenic_form_simplified"]="autre"
 
-    print(df['galenic_form_simplified'].unique())
+    if print_galenic==True:
+        print("\nForme pharmaceutiques disponibles après nettoyage")
+        for form in sorted(df['galenic_form_simplified'].unique()):
+            print(form)
 
     # We build a vectorized representation of route of administration
     all_routes=[]
@@ -94,8 +99,12 @@ def use_categorical_types(df):
             if route not in all_routes:
                 all_routes.append(route)
 
-    print(all_routes)
-    print("Length of the route admin vector is %i" % len(all_routes))
+    if print_route ==True:
+        print("\nVoie d'administration disponible après nettoyage")
+        for administration in sorted(all_routes):
+            print(administration)
+
+    #print("Length of the route admin vector is %i" % len(all_routes))
 
     def f_vectorize(elem__list):
         all_vect=[]

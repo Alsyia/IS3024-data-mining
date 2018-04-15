@@ -4,7 +4,7 @@ __pycache__/
 *$py.class
 
 # Mac stuff
-.idea
+.idea/
 
 # C extensions
 *.so

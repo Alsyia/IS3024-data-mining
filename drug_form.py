@@ -11,12 +11,18 @@ plot_info=False
 
 data_file = "./Data/CIS_bdpm.txt"
 
-drugs = pd.read_table(data_file, names=DRUGS_COLUMNS, encoding="latin-1")
+drugs = pd.read_table(data_file, names=DRUGS_COLUMNS, encoding="windows-1252")
 drugs = drugs.set_index("CIS")
 
-forms = pd.read_table("./Data/CIS_CIP_bdpm.txt", names=FORMS_COLUMNS, encoding="latin-1", sep="\t", index_col=False)
+forms = pd.read_table("./Data/CIS_CIP_bdpm.txt", names=FORMS_COLUMNS, encoding="windows-1252", sep="\t", index_col=False)
 forms = forms.set_index("CIP7")
 
+smr_file = "./Data/CIS_HAS_SMR_bdpm.txt"
+smr = pd.read_table(smr_file, names=SMR_COLUMNS, encoding="windows-1252", sep="\t")
+
+asmr_file = "./Data/CIS_HAS_ASMR_bdpm.txt"
+asmr = pd.read_table(asmr_file, names=ASMR_COLUMNS, encoding="windows-1252", sep="\t")
+print(asmr.head())
 # TODO : Un médicament n'ayant pas de taux de remboursement (non-remboursé) ne devrait pas avoir d'honoraire de dispensation ?
 
 # Jointure sur les médicaments et leurs présentations

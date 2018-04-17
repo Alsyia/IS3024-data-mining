@@ -141,7 +141,7 @@ def simple_smr(smr):
     def weights_func(comment, not_defined, insufficient, low, moderate, high):
 
 
-        return 0*comment + 0*not_defined + -1*insufficient + 1*low + 2*moderate + 3*high
+        return 0*comment + 0*not_defined + -3*insufficient + 1*low + 2*moderate + 6*high
 
     categories = ['Commentaires',
                   'Non précisé',
@@ -159,8 +159,13 @@ def simple_asmr(asmr):
     # We can have different reviews for a same drug if this drug has different usages
     # A way to simplify data is then to count reviews by type (very good, good, bad, etc) for each drug
 
+    asmr["date_avis_commission_transparence"] = asmr["date_avis_commission_transparence"].astype(str)
+    asmr["date_avis_commission_transparence"] = asmr["date_avis_commission_transparence"].apply(du.parser.parse)
+
     asmr["ASMR_value"] = asmr["ASMR_value"].astype("category")
-    simple_asmr = asmr.groupby("CIS")["ASMR_value"].value_counts().unstack(fill_value=0)
+    grouped_asmr = asmr.groupby("CIS")
+    filtered_asmr =  grouped_asmr.apply(lambda x: x[x["date_avis_commission_transparence"] == x["date_avis_commission_transparence"].max()])
+    simple_asmr = filtered_asmr.groupby("CIS")["ASMR_value"].value_counts().unstack(fill_value=0)
     simple_asmr["CIS"] = simple_asmr.index
 
     def weights_func(comment, not_defined, not_relevant, one, two, three, four, five):

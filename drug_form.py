@@ -7,7 +7,7 @@ from Plots import *
 from sklearn.decomposition import PCA
 
 # Variables
-plot_info=False
+plot_info=True
 
 data_file = "./Data/CIS_bdpm.txt"
 
@@ -19,14 +19,17 @@ forms = forms.set_index("CIP7")
 
 smr_file = "./Data/CIS_HAS_SMR_bdpm.txt"
 smr = pd.read_table(smr_file, names=SMR_COLUMNS, encoding="windows-1252", sep="\t")
+smr = simple_smr(smr)
 
 asmr_file = "./Data/CIS_HAS_ASMR_bdpm.txt"
 asmr = pd.read_table(asmr_file, names=ASMR_COLUMNS, encoding="windows-1252", sep="\t")
-print(asmr.head())
+asmr = simple_asmr(asmr)
+
 # TODO : Un médicament n'ayant pas de taux de remboursement (non-remboursé) ne devrait pas avoir d'honoraire de dispensation ?
 
 # Jointure sur les médicaments et leurs présentations
-forms_drugs = forms.join(drugs, on="CIS", lsuffix="_left", rsuffix="_right")
+# forms_drugs = forms.join(drugs, on="CIS", lsuffix="_left", rsuffix="_right")
+forms_drugs = forms.merge(drugs, left_on="CIS", right_index=True, suffixes=("_left", "_right"))
 forms_drugs = forms_drugs[DRUGS_FORMS_REORDERED_COLUMNS]
 
 # Delete rows without price
@@ -45,12 +48,17 @@ use_date_types(forms_drugs)
 #with pd.option_context("display.max_seq_items", 30000):
 #    print(forms_drugs['galenic_form'].cat.categories)
 
+# Joint with SMR and ASMR
+df_smr = forms_drugs.merge(smr, how="left")
+df_full = df_smr.merge(asmr, how="left")
+
 # Make a subset to make operations faster
-partfd = forms_drugs[:1000]
+partfd = df_full[:1000]
 
 if plot_info:
     plots_things_about_reinbursement_rate(partfd)
-    plots_things_about_price(partfd)
+    # plots_things_about_price(partfd)
+
 
 #Transforme l'etat de commercialisation en des variables string puis binaires
 forms_drugs['commercialisation_status_right']=forms_drugs['commercialisation_status_right'].astype(str)

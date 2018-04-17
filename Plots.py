@@ -16,6 +16,9 @@ def plots_things_about_reinbursement_rate(df):
     sb.stripplot(x="clearance_date", y="reinbursement_rate", data=df, jitter=True)
     plt.show()
 
+    sb.stripplot(x="SMR_score", y="reinbursement_rate", data=df, jitter=True)
+    plt.show()
+
     print(pd.crosstab(df["reinbursement_rate"], df["clearance_type"]))
 
 def plots_things_about_price(df):

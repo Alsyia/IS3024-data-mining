@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import seaborn as sb
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -22,7 +24,7 @@ def plots_things_about_price(df):
     sb.distplot(df["price"])
     plt.show()
 
-    # Price vs galenic form plot (not very useful, some outliers for comprimés/gelules/injections
+    # Price vs galenic form plot (not very useful, some outliers for comprimes/gelules/injections)
     p = sb.stripplot(x="galenic_form", y="price", data=df)
     p.set_xticklabels(p.get_xticklabels(), rotation=45)
     plt.show()

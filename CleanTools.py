@@ -4,6 +4,7 @@ import dateutil as du
 from pandas.api.types import CategoricalDtype
 import numpy as np
 from functools import partial
+import pandas as pd
 # with pd.option_context("display.max_rows", 30000):
 #     display(forms_drugs['price'])
 
@@ -128,9 +129,13 @@ def simple_smr(smr):
     # We can have different reviews for a same drug if this drug has different usages
     # A way to simplify data is then to count reviews by type (very good, good, bad, etc) for each drug
 
-    # smr["date_avis_commission_transparence"] = smr["date_avis_commission_transparence"].apply(du.parser.parse)
+    smr["date_avis_commission_transparence"] = smr["date_avis_commission_transparence"].astype(str)
+    smr["date_avis_commission_transparence"] = smr["date_avis_commission_transparence"].apply(du.parser.parse)
     smr["SMR_value"] = smr["SMR_value"].astype("category")
-    simple_smr = smr.groupby("CIS")["SMR_value"].value_counts().unstack(fill_value=0)
+    grouped_smr = smr.groupby("CIS")
+    filtered_smr = grouped_smr.apply(lambda x: x[x["date_avis_commission_transparence"] == x["date_avis_commission_transparence"].max()])
+
+    simple_smr = filtered_smr.groupby("CIS")["SMR_value"].value_counts().unstack(fill_value=0)
     simple_smr["CIS"] = simple_smr.index
 
     def weights_func(comment, not_defined, insufficient, low, moderate, high):

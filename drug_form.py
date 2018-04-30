@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from Schema import *
-from CleanTools import *
+from clean_tools import *
 from Plots import *
 # Import dataset
 from sklearn.decomposition import PCA
@@ -9,13 +9,15 @@ from sklearn.decomposition import PCA
 # Variables
 plot_info=True
 
-data_file = "./Data/CIS_bdpm.txt"
-
-drugs = pd.read_table(data_file, names=DRUGS_COLUMNS, encoding="windows-1252")
+drugs = pd.read_table("./Data/CIS_bdpm.txt", names=DRUGS_COLUMNS, encoding="windows-1252")
 drugs = drugs.set_index("CIS")
+drugs_cleaner = DrugsCleaner()
+drugs_cleaner.clean(drugs)
 
 forms = pd.read_table("./Data/CIS_CIP_bdpm.txt", names=FORMS_COLUMNS, encoding="windows-1252", sep="\t", index_col=False)
 forms = forms.set_index("CIP7")
+forms_cleaner = FormsCleaner()
+forms_cleaner.clean(forms)
 
 smr_file = "./Data/CIS_HAS_SMR_bdpm.txt"
 smr = pd.read_table(smr_file, names=SMR_COLUMNS, encoding="windows-1252", sep="\t")
@@ -28,22 +30,21 @@ asmr = simple_asmr(asmr)
 # TODO : Un médicament n'ayant pas de taux de remboursement (non-remboursé) ne devrait pas avoir d'honoraire de dispensation ?
 
 # Jointure sur les médicaments et leurs présentations
-# forms_drugs = forms.join(drugs, on="CIS", lsuffix="_left", rsuffix="_right")
 forms_drugs = forms.merge(drugs, left_on="CIS", right_index=True, suffixes=("_left", "_right"))
 forms_drugs = forms_drugs[DRUGS_FORMS_REORDERED_COLUMNS]
 
 # Delete rows without price
 forms_drugs = forms_drugs[pd.notnull(forms_drugs["price"])]
 
-# Clean price format
-clean_prices(forms_drugs, "price")
-
-# Clean reinbursement_rates
-clean_reinbursement_rates(forms_drugs, "reinbursement_rate")
-
-# Use correct types
-use_categorical_types(forms_drugs, print_galenic=False, print_route=False)
-use_date_types(forms_drugs)
+# # Clean price format
+# clean_prices(forms_drugs, "price")
+#
+# # Clean reinbursement_rates
+# clean_reinbursement_rates(forms_drugs, "reinbursement_rate")
+#
+# # Use correct types
+# use_categorical_types(forms_drugs, print_galenic=False, print_route=False)
+# use_date_types(forms_drugs)
 
 #with pd.option_context("display.max_seq_items", 30000):
 #    print(forms_drugs['galenic_form'].cat.categories)

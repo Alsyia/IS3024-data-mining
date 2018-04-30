@@ -27,6 +27,20 @@ FORMS_COLUMNS = ["CIS",
                  "dispensing_fee",  # Je suppose...
                  "description"]
 
+SMR_COLUMNS = ["CIS",
+               "dossier_HAS",
+               "motif_evaluation",
+               "date_avis_commission_transparence",
+               "SMR_value",
+               "SMR_label"]
+
+ASMR_COLUMNS = ["CIS",
+                "dossier_HAS",
+                "motif_evaluation",
+                "date_avis_commission_transparence",
+                "ASMR_value",
+                "ASMR_label"]
+
 DRUGS_FORMS_COLUMNS = ['CIS', 'label', 'administrative_status',
                        'commercialisation_status_left', 'commercialisation_date', 'CIP13',
                        'collectivities_aggreement', 'reinbursement_rate', 'price', 'total_price',
@@ -41,18 +55,3 @@ DRUGS_FORMS_REORDERED_COLUMNS = ['denomination', 'label', 'galenic_form', 'price
                                  'administrative_status', 'dispensing_fee', 'description', 'route_of_administration',
                                  'clearance_status', 'clearance_type', 'commercialisation_status_right', 'bdm_status',
                                  'clearance_id', 'enhanced_monitoring', 'CIS', 'CIP13', ]
-
-
-SMR_COLUMNS = ["CIS",
-               "dossier_HAS",
-               "motif_evaluation",
-               "date_avis_commission_transparence",
-               "SMR_value",
-               "SMR_label"]
-
-ASMR_COLUMNS = ["CIS",
-               "dossier_HAS",
-               "motif_evaluation",
-               "date_avis_commission_transparence",
-               "ASMR_value",
-               "ASMR_label"]

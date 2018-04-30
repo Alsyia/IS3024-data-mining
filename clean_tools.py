@@ -19,13 +19,18 @@ class FormsCleaner:
 
     def clean(self, df):
 
-        methods = [FormsCleaner.clean_prices_format,
+        methods = [FormsCleaner.clean_null_prices,
+                   FormsCleaner.clean_prices_format,
                    FormsCleaner.clean_reinbursement_rates,
                    FormsCleaner.clean_categorical_types,
                    FormsCleaner.clean_dates]
 
         for method in methods:
             method(df)
+
+    @staticmethod
+    def clean_null_prices(df):
+        df = df[pd.notnull(df["price"])]
 
     @staticmethod
     def clean_prices_format(df, col_name="price"):
@@ -54,8 +59,7 @@ class FormsCleaner:
         # Transform all categorical fields into categorical datatype
         for column in ["administrative_status",
                        "commercialisation_status",
-                       "collectivities_aggreement",
-                       "administrative_status"]:
+                       "collectivities_aggreement"]:
             df[column] = df[column].astype('category')
 
     @staticmethod
@@ -243,11 +247,11 @@ def simple_asmr(asmr):
                   "Sans objet",
                   "I",
                   "II",
-                  "II",
+                  "III",
                   "IV",
                   "V"]
 
-    simple_asmr["SMR_score"] = np.vectorize(weights_func)(*[simple_asmr[cat] for cat in categories])
+    simple_asmr["ASMR_score"] = np.vectorize(weights_func)(*[simple_asmr[cat] for cat in categories])
 
     return simple_asmr
 

@@ -19,7 +19,7 @@ def binary_labels_encode(df):
 def multivalues_labels_encode(df, features):
 
     columns = ["galenic_form_simplified",
-                          "owners",
+                          #"owners",
                           "commercialisation_status_left",
                           # "route_of_administration",
                           "clearance_status",

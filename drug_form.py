@@ -9,7 +9,8 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn import tree
 from preprocessing_tools import *
 import graphviz
-
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
 # Variables
 plot_info=False
 
@@ -55,7 +56,7 @@ features = ["galenic_form_simplified",
             # "price",
             # "commercialisation_date",
             # "clearance_date",
-            "owners",
+            #"owners",
             "commercialisation_status_left",
             "collectivities_aggreement",
             "administrative_status",
@@ -88,15 +89,24 @@ binary_mapping = binary_labels_encode(x)
 
 x = multivalues_labels_encode(x, features)
 
+x_train, x_test, y_train, y_test=train_test_split(x,y)
+
 # Info about DecisionTreeClassifiers http://scikit-learn.org/stable/modules/tree.html#tree
 clf = DecisionTreeClassifier()
-clf.fit(x, y)
-print(clf.score(x, y))
+clf.fit(x_train, y_train)
+print(clf.score(x_train, y_train))
 
-dot_data = tree.export_graphviz(clf,feature_names=x.columns,
-                         class_names=target,
-                         filled=True, rounded=True,
-                         special_characters=True, out_file=None)
+predictions=clf.predict(x_test)
 
-graph = graphviz.Source(dot_data)
-graph.render("tree")
+print(set(predictions))
+
+print("Score : %.2f " %accuracy_score(y_test,predictions,normalize=True))
+
+if plot_info:
+    dot_data = tree.export_graphviz(clf,feature_names=x.columns,
+                             class_names=target,
+                             filled=True, rounded=True,
+                             special_characters=True, out_file=None)
+
+    graph = graphviz.Source(dot_data)
+    graph.render("tree")

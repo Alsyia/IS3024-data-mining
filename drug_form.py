@@ -92,6 +92,7 @@ x = multivalues_labels_encode(x, features)
 x_train, x_test, y_train, y_test=train_test_split(x,y)
 
 # Info about DecisionTreeClassifiers http://scikit-learn.org/stable/modules/tree.html#tree
+
 clf = DecisionTreeClassifier()
 clf.fit(x_train, y_train)
 print(clf.score(x_train, y_train))

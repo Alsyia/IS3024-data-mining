@@ -6,7 +6,9 @@ from Plots import *
 # Import dataset
 from sklearn.decomposition import PCA
 from sklearn.tree import DecisionTreeClassifier
+from sklearn import tree
 from preprocessing_tools import *
+import graphviz
 
 # Variables
 plot_info=False
@@ -57,7 +59,8 @@ features = ["galenic_form_simplified",
             "commercialisation_status_left",
             "collectivities_aggreement",
             "administrative_status",
-            # "route_of_administration",
+            #"route_vect",
+            #"route_of_administration",
             "clearance_status",
             "clearance_type",
             "commercialisation_status_right",
@@ -76,13 +79,24 @@ features = ["galenic_form_simplified",
 
 
 df_dataset = df_full[[*features, target]]
+
 df_dataset = df_dataset[pd.notnull(df_dataset["reinbursement_rate"])]
 y = df_dataset[target]
 
 x = df_dataset[features]
 binary_mapping = binary_labels_encode(x)
+
 x = multivalues_labels_encode(x, features)
 
+# Info about DecisionTreeClassifiers http://scikit-learn.org/stable/modules/tree.html#tree
 clf = DecisionTreeClassifier()
 clf.fit(x, y)
 print(clf.score(x, y))
+
+dot_data = tree.export_graphviz(clf,feature_names=x.columns,
+                         class_names=target,
+                         filled=True, rounded=True,
+                         special_characters=True, out_file=None)
+
+graph = graphviz.Source(dot_data)
+graph.render("tree")

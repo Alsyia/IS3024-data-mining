@@ -5,6 +5,7 @@ from pandas.api.types import CategoricalDtype
 import numpy as np
 from functools import partial
 import inspect
+from Schema import *
 
 import pandas as pd
 
@@ -149,39 +150,19 @@ class DrugsCleaner:
 
     @staticmethod
     def clean_routes(df, print_route=True):
+        df["I"]=0
+        df["A"]=0
+        df["P"]=0
+
         # We build a vectorized representation of route of administration
         all_routes = []
 
-        for elem in df["route_of_administration"].cat.categories:
-            elem_sp = elem.split(";")
+        for index, row in df.iterrows():
+            list_of_routes=row["route_of_administration"]
+            elem_sp = list_of_routes.split(";")
             for route in elem_sp:
-                if route not in all_routes:
-                    all_routes.append(route)
+                df.set_value(index,cat_reduced[str(route)], 1)
 
-        for administration in sorted(all_routes):
-            if print_route:
-                print(administration)
-
-            df["routes_" + str(administration)] = 0
-
-        for elem in df.iterrows():
-            for curr_r in elem[1]['route_of_administration'].split(";"):
-                df.loc[elem[0], 'route_'+str(curr_r)] = 1
-
-        # print("Length of the route admin vector is %i" % len(all_routes))
-
-        def f_vectorize(elem__list):
-            all_vect = []
-            for elem in elem__list:
-                vect = [0] * len(all_routes)
-                for i in range(0, len(all_routes)):
-                    if all_routes[i] in elem.split(";"):
-                        vect[i] = 1
-                all_vect.append(vect)
-            return all_vect
-
-
-        #df['route_vect'] = f_vectorize(df['route_of_administration'])
 
     @staticmethod
     def clean_dates(df):

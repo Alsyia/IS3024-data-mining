@@ -66,11 +66,9 @@ if plot_info:
     print("Length of ASMR file is %i" %len(asmr))
     print("Length of SMR file  is %i" %len(smr))
 
-print(df_full["A"])
-
 target = "reinbursement_rate"
 features = ["galenic_form_simplified",
-            #"price",
+            "price",
             # "commercialisation_date",
             # "clearance_date",
             #"owners",
@@ -84,9 +82,13 @@ features = ["galenic_form_simplified",
             "enhanced_monitoring",
             "I",
             "A",
-            "P"]
+            "P"
+             ]
 
 df_dataset = df_full[[*features, target]]
+df_dataset=df_dataset[df_dataset['reinbursement_rate']!='65%']
+
+print(df_dataset.groupby('reinbursement_rate')['reinbursement_rate'].count())
 
 df_dataset = df_dataset[pd.notnull(df_dataset["reinbursement_rate"])]
 y = df_dataset[target]
@@ -104,6 +106,7 @@ clf.fit(x_train, y_train)
 predictions=clf.predict(x_test)
 
 print(set(predictions))
+
 print("Score : %.2f " %accuracy_score(y_test,predictions,normalize=True))
 
 print("Confusion matrix")

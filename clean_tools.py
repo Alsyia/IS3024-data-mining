@@ -5,7 +5,7 @@ from pandas.api.types import CategoricalDtype
 import numpy as np
 from functools import partial
 import inspect
-from Schema import *
+from schema import *
 
 import pandas as pd
 

@@ -1,17 +1,15 @@
 # -*- coding: utf-8 -*-
 
-from Schema import *
-from clean_tools import *
-from Plots import *
-# Import dataset
-from sklearn.decomposition import PCA
-from sklearn.tree import DecisionTreeClassifier
-from sklearn import tree
-from preprocessing_tools import *
 import graphviz
-from sklearn.model_selection import train_test_split
+from sklearn import tree
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import confusion_matrix
+from sklearn.model_selection import train_test_split
+# Import dataset
+from sklearn.tree import DecisionTreeClassifier
+
+from clean_tools import *
+from preprocessing_tools import *
 
 # Variables
 plot_info=True
@@ -37,15 +35,12 @@ asmr = simple_asmr(asmr)
 # Jointure sur les médicaments et leurs présentations
 forms_drugs = forms.merge(drugs, left_on="CIS", right_index=True, suffixes=("_left", "_right"))
 
-#print(forms_drugs["commercialisation_date"])
-
 # We fill missing price values
 # We can use a price average
 #forms_drugs["price"]=forms_drugs["price"].fillna(forms_drugs["price"].mean())
 # Or we can user an interpolation
 forms_drugs['price']=forms_drugs['price'].interpolate()
 
-#print(forms_drugs['price'].head(50))
 forms_drugs = forms_drugs[DRUGS_FORMS_REORDERED_COLUMNS]
 
 # Joint with SMR and ASMR
